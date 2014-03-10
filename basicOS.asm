@@ -1,8 +1,8 @@
 ;copy from MikeOS [1]
 ;display "This is my cool new OS!"
-;build & run£ºsee build.bat or[1]
+;build & runï¿½ï¿½see build.bat or[1]
 ;ref 
-;1.http://mikeos.berlios.de/write-your-own-os.html
+;[1].http://mikeos.berlios.de/write-your-own-os.html
 
 
 BITS 16
@@ -14,27 +14,24 @@ start:
 	mov ss, ax
 	mov sp, 4096
 ;set ss=07c0h+288,sp=4096,stack is used in call/ret
-;07c0h is where the first instruction of this code loaded to.
-;this code will be using 512 bytes,4096 bytes are allocated after this as stack.
+;07c0h is where the first instruction of this code is loaded to.
+;this code will be using 512 bytes. 4096 bytes are allocated after this as stack.
 ;real address will be (07c0h+288)*16
 ;? 07c0h is not clear 
 
 	mov ax, 07C0h		; Set data segment to where we're loaded
 	mov ds, ax
-;set ds=07c0h
-
 
 	mov si, text_string	; Put string position into SI
 	call print_string	; Call our string-printing routine
 
 	jmp $			; Jump here - infinite loop!
 
-
 	text_string db 'This is my cool new OS!', 0
 
 ;int 10H
-;Teletype output	AH=0Eh	
-;params :		AL = Character, BH = Page Number, BL = Color (only in graphic mode)
+;AH = Function code (0Eh: Teletype output)
+;AL = Character, BH = Page Number, BL = Color (only in graphic mode)
 ;ref wiki ' int 10H '
 
 print_string:			; Routine: output string in SI to screen
@@ -49,7 +46,6 @@ print_string:			; Routine: output string in SI to screen
 
 .done:
 	ret
-
 
 	times 510-($-$$) db 0	; Pad remainder of boot sector with 0s
 	dw 0xAA55		; The standard PC boot signature
